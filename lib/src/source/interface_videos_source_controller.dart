@@ -10,9 +10,13 @@ import '../data/type_defs.dart';
 import 'isolate_mixin_helpers.dart';
 
 part 'impl_from_channel_id.dart';
+
 part 'impl_from_channel_name.dart';
+
 part 'impl_from_multiple_channels_ids.dart';
+
 part 'impl_from_multiple_channels_name.dart';
+
 part 'impl_from_url_list.dart';
 
 abstract class VideosSourceController {
@@ -98,10 +102,14 @@ abstract class VideosSourceController {
   }
 
   Future<MuxedStreamInfo> getVideoInfoFromVideoModel(String videoId) async {
-    final StreamManifest streamInfo = await YoutubeExplode()
-        .videos
-        .streams
-        .getManifest(videoId, requireWatchPage: false);
+    final StreamManifest streamInfo =
+        await YoutubeExplode().videos.streamsClient.getManifest(videoId,
+            ytClients: [
+              YoutubeApiClient.safari,
+              YoutubeApiClient.android,
+              YoutubeApiClient.ios,
+            ],
+            requireWatchPage: false);
 
     final onlyNumberRegex = RegExp(r'[^0-9]');
 
